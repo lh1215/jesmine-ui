@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+// import { css } from "styled-components";
 
 export const color = {
   // Palette
@@ -83,3 +83,19 @@ export const btnPadding = {
 };
 export const breakpoint = 600;
 export const pageMargin = 5;
+
+export const badgeColor = {
+  positive: color.positive,
+  negative: color.negative,
+  neutral: color.dark,
+  warning: color.warning,
+  error: color.lightest,
+}
+
+export const badgeBackground = {
+  positive: background.positive,
+  negative: background.negative,
+  neutral: color.mediumlight,
+  warning: background.warning,
+  error: color.negative,
+}
