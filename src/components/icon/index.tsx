@@ -32,6 +32,7 @@ const Icon = (props: IconProps) => {
       height="20px"
       d={icons[icon]}
       block={block}
+      data-testid="icon-svg"
       {...props}
     >
       <Path d={icons[icon]} color={color} />
