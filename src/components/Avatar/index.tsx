@@ -2,7 +2,7 @@ import React, { useMemo, HTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 import { color, typography } from "../shared/styles";
 import { glow } from "../shared/animation";
-import  Icon from "../icon";
+import  Index from "../Icon";
 
 export const AvatarSize = {
   large: 40,
@@ -119,7 +119,7 @@ interface a11yProps {
 export function Avatar(props: AvatarProps) {
   const { isLoading, src, username, size } = props;
   const avatarFigure = useMemo(() => {
-    let avatarFigure = <Icon icon="useralt" />;
+    let avatarFigure = <Index icon="useralt" />;
     const a11yProps: a11yProps = {};
     if (isLoading) {
       a11yProps["aria-busy"] = true;

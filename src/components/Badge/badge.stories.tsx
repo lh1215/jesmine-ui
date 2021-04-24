@@ -1,7 +1,8 @@
 import React from "react";
-import Badge from "./badge";
-import Icon from "../icon";
-import {withKnobs} from "@storybook/addon-knobs";
+import Badge, {BadgeProps} from "./index";
+import Icon from "../Icon";
+import {select, text, withKnobs} from "@storybook/addon-knobs";
+import {badgeColor} from "../shared/styles";
 
 // 需求注册到 storybook，要不然面板不会显示
 export default {
@@ -10,6 +11,19 @@ export default {
   decorators: [withKnobs],
 };
 
+type selectType = "positive" | "negative" | "neutral" | "warning" | "error";
+
+export const knobsBadge = () => (
+  <Badge
+    status={select<BadgeProps["status"]>(
+      "status",
+      Object.keys(badgeColor) as selectType[],
+      "neutral"
+    )}
+  >
+    {text("children", "i am badge")}
+  </Badge>
+)
 
 export const all = () => (
   <div>
@@ -23,7 +37,7 @@ export const all = () => (
 
 export const withIcon = () => (
   <Badge status="warning">
-    <Icon icon="check" />
+    <Icon icon="check"/>
     with icon
   </Badge>
 )

@@ -1,7 +1,7 @@
 import React from "react";
-import Button, { ButtonProps } from "./button";
+import Index, { ButtonProps } from "../index";
 import { render, fireEvent, cleanup } from "@testing-library/react";
-import { color, typography, btnPadding } from "../shared/styles";
+import { color, typography, btnPadding } from "../../shared/styles";
 
 const defaultProps = {
   onClick: jest.fn(),
@@ -22,9 +22,9 @@ const disabledProps: ButtonProps = {
 describe("test button component", () => {
   it("should render the correct default button", () => {
     const wrapper = render(
-      <Button data-testid="button" {...defaultProps}>
+      <Index data-testid="button" {...defaultProps}>
         hello
-      </Button>
+      </Index>
     );
     const ele = wrapper.getByTestId("button");
     expect(ele).toBeInTheDocument();
@@ -56,72 +56,72 @@ describe("test button component", () => {
   });
   it("should render correct appearance", () => {
     let wrapper = render(
-      <Button data-testid="button" {...testProps}>
+      <Index data-testid="button" {...testProps}>
         hello
-      </Button>
+      </Index>
     );
     let ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`background:${color.primary}`);
     expect(ele).toHaveStyle(`color: ${color.lightest}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="inverseOutline">
+      <Index data-testid="button" appearance="inverseOutline">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`box-shadow: ${color.lightest} 0 0 0 1px inset`);
     expect(ele).toHaveStyle(`color: ${color.lightest}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="inversePrimary">
+      <Index data-testid="button" appearance="inversePrimary">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`background:${color.lightest}`);
     expect(ele).toHaveStyle(`color: ${color.primary}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="inverseSecondary">
+      <Index data-testid="button" appearance="inverseSecondary">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`background:${color.lightest}`);
     expect(ele).toHaveStyle(`color: ${color.secondary}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="outline">
+      <Index data-testid="button" appearance="outline">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`background:transparent`);
     expect(ele).toHaveStyle(`color: ${color.dark}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="primaryOutline">
+      <Index data-testid="button" appearance="primaryOutline">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`box-shadow: ${color.primary} 0 0 0 1px inset`);
     expect(ele).toHaveStyle(`color: ${color.primary}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="secondary">
+      <Index data-testid="button" appearance="secondary">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`background:${color.secondary}`);
     expect(ele).toHaveStyle(`color: ${color.lightest}`);
     cleanup();
     wrapper = render(
-      <Button data-testid="button" appearance="secondaryOutline">
+      <Index data-testid="button" appearance="secondaryOutline">
         hello
-      </Button>
+      </Index>
     );
     ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`box-shadow: ${color.secondary} 0 0 0 1px inset`);
@@ -129,9 +129,9 @@ describe("test button component", () => {
   });
   it("should render correct size", () => {
     const wrapper = render(
-      <Button data-testid="button" {...testProps}>
+      <Index data-testid="button" {...testProps}>
         hello
-      </Button>
+      </Index>
     );
     const ele = wrapper.getByTestId("button");
     expect(ele).toHaveStyle(`padding: ${btnPadding.small}`);
@@ -140,9 +140,9 @@ describe("test button component", () => {
 
   it("should render a link", () => {
     const wrapper = render(
-      <Button data-testid="button" isLink href="/">
+      <Index data-testid="button" isLink href="/">
         linkbutton
-      </Button>
+      </Index>
     );
     const ele = wrapper.getByTestId("button");
     expect(ele).toBeInTheDocument();
@@ -151,9 +151,9 @@ describe("test button component", () => {
   });
   it("should render disabled", () => {
     const wrapper = render(
-      <Button data-testid="button" {...disabledProps}>
+      <Index data-testid="button" {...disabledProps}>
         disabled button
-      </Button>
+      </Index>
     );
     const ele = wrapper.getByTestId("button");
     expect(ele).toBeInTheDocument();
@@ -164,9 +164,9 @@ describe("test button component", () => {
 
   it("should render loading", () => {
     const wrapper = render(
-      <Button data-testid="button" isLoading>
+      <Index data-testid="button" isLoading>
         loading
-      </Button>
+      </Index>
     );
     const ele = wrapper.getByTestId("button");
     expect(ele).toBeInTheDocument();
@@ -174,9 +174,9 @@ describe("test button component", () => {
     const text = wrapper.getByText("loading");
     expect(text).toHaveStyle("opacity: 0");
     const wrapper2 = render(
-      <Button isLoading loadingText="jesmineUI">
+      <Index isLoading loadingText="jesmineUI">
         hello
-      </Button>
+      </Index>
     );
     const text2 = wrapper2.getByText("jesmineUI");
     expect(text2).toBeTruthy();
@@ -184,9 +184,9 @@ describe("test button component", () => {
 
   it("should isUnclickable", () => {
     const wrapper = render(
-      <Button data-testid="button" isUnclickable>
+      <Index data-testid="button" isUnclickable>
         hello
-      </Button>
+      </Index>
     );
     const ele = wrapper.getByTestId("button");
     expect(ele).toBeInTheDocument();
