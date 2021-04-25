@@ -1,24 +1,24 @@
 import React from "react";
-import Index, { IconProps } from "./index";
+import Icon, { IconProps } from "./index";
 import { withKnobs, color, select } from "@storybook/addon-knobs";
 import styled from "styled-components";
 import { icons } from "../shared/icons";
 
 export default {
   title: "Icon",
-  component: Index,
+  component: Icon,
   decorators: [withKnobs],
 };
 
 export const knobsIcon = () => (
-  <Index
+  <Icon
     icon={select<IconProps["icon"]>(
       "icons",
       Object.keys(icons) as IconProps["icon"][],
       "useradd"
     )}
     color={color("color", "black")}
-  ></Index>
+  />
 );
 
 const Meta = styled.div`
@@ -49,7 +49,7 @@ export const labels = () => (
     <List>
       {Object.keys(icons).map((key) => (
         <Item key={key}>
-          <Index icon={key as keyof typeof icons} />
+          <Icon icon={key as keyof typeof icons} />
           <Meta>{key}</Meta>
         </Item>
       ))}
