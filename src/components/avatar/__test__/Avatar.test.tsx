@@ -1,6 +1,6 @@
 import React from "react";
 import { render, cleanup } from "@testing-library/react";
-import { Avatar, AvatarSize } from "../Avatar";
+import { Avatar, AvatarSize } from "../index";
 
 describe("test Avatar component", () => {
   test("it should render default avatar", () => {
