@@ -1,10 +1,12 @@
 import React from "react";
 import Badge, {BadgeProps} from "./index";
-import Icon from "../Icon";
+import Icon from "../icon";
 import {select, text, withKnobs} from "@storybook/addon-knobs";
 import {badgeColor} from "../shared/styles";
 
 // 需求注册到 storybook，要不然面板不会显示
+
+/* eslint import/no-anonymous-default-export: [0, {"allowAnonymousClass": true}] */
 export default {
   title: "Badge",
   component: Badge,

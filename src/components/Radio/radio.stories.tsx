@@ -3,7 +3,7 @@ import {boolean, select, text, withKnobs} from "@storybook/addon-knobs";
 import React, {useState} from "react";
 import {color} from "../shared/styles";
 import {action} from "@storybook/addon-actions";
-import Icon from "../Icon";
+import Icon from "../icon";
 
 export default {
   title: 'Radio',
