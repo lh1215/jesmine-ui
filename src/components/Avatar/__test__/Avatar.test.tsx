@@ -1,6 +1,6 @@
 import React from "react";
 import { render, cleanup } from "@testing-library/react";
-import { Avatar, AvatarSize } from "../index";
+import { Avatar, AvatarSize } from "../Avatar";
 
 describe("test Avatar component", () => {
   test("it should render default avatar", () => {
@@ -54,13 +54,13 @@ describe("test Avatar component", () => {
   });
   test("should correct loading", () => {
     let wrapper = render(<Avatar isLoading></Avatar>);
-    let svg = wrapper.getByTestId("icon-svg");
+    let svg = wrapper.container.querySelector("svg");
     expect(svg).toBeVisible();
     cleanup();
     wrapper = render(
       <Avatar isLoading username="123" src="/" size="tiny"></Avatar>
     );
-    svg = wrapper.getByTestId("icon-svg");
+    svg = wrapper.container.querySelector("svg");
     expect(svg).toBeVisible();
   });
   test("should correct img", () => {
