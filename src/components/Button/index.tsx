@@ -289,11 +289,11 @@ const StyledButton = styled.button<ButtonProps>`
           }
 
           &:focus {
-            box-shadow: ${opacify(0.05, color.border)} 0 0 0 1px inset, 
+            box-shadow: ${opacify(0.05, color.border)} 0 0 0 1px inset,
             ${rgba(color.darkest, 0.15)} 0 1px 9px 2px;
           }
           &:focus:hover {
-            box-shadow: ${opacify(0.05, color.border)} 0 0 0 1px inset, 
+            box-shadow: ${opacify(0.05, color.border)} 0 0 0 1px inset,
             ${rgba(color.darkest, 0.05)} 0 8px 18px 0px;
           }
         `

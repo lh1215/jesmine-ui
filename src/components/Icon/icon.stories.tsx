@@ -18,7 +18,7 @@ export const knobsIcon = () => (
       "useradd"
     )}
     color={color("color", "black")}
-  ></Icon>
+  />
 );
 
 const Meta = styled.div`
