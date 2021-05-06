@@ -1,8 +1,10 @@
-import React, { PropsWithChildren, ReactNode, useState, useRef } from "react";
+import React, { PropsWithChildren, useCallback, useState, useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Button from "../button";
 import { Method, AxiosRequestConfig, CancelTokenSource } from "axios";
+import { UploadList, ImageList } from "../uploadList";
+
 export const updateFilist = (
   setFlist: React.Dispatch<React.SetStateAction<ProgressBar[]>>,
   _file: ProgressBar,
@@ -23,7 +25,7 @@ export const updateFilist = (
   });
 };
 
-interface ProgressBar {
+export interface ProgressBar {
   filename: string;
   percent: number;
   status: "ready" | "success" | "failed" | "upload";
@@ -34,6 +36,7 @@ interface ProgressBar {
   img?: string | ArrayBuffer | null;
 }
 type onProgressType = ((p: number, f: File, i: number) => void) | undefined;
+type UploadMode = "default" | "img";
 
 const postData = function (
   file: File,
@@ -122,6 +125,18 @@ type UploadProps = {
   failCallback?: ((res: any, i: number) => void) | undefined;
   /** 上传列表初始值 */
   defaultProgressBar?: ProgressBar[];
+  /** 如果返回promise，需要提供file，否则同步需要返回boolean，如果为false，则不发送*/
+  beforeUpload?: (f: File, i: number) => boolean | Promise<File>;
+  /** 上传模式 2种 */
+  uploadMode?: UploadMode;
+  /** 是否开启进度列表 */
+  progress?: boolean;
+  onRemoveCallback?: (f: ProgressBar) => void;
+  /** 自定义删除行为，只有img与progress为true有效*/
+  customRemove?: (
+    file: ProgressBar,
+    setFlist: React.Dispatch<React.SetStateAction<ProgressBar[]>>
+  ) => void;
 };
 
 export function Upload(props: UploadProps) {
@@ -132,6 +147,11 @@ export function Upload(props: UploadProps) {
     uploadFilename,
     successCallback,
     failCallback,
+    beforeUpload,
+    uploadMode,
+    progress,
+    customRemove,
+    onRemoveCallback,
   } = props;
   const [flist, setFlist] = useState<ProgressBar[]>(defaultProgressBar || []);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -140,22 +160,81 @@ export function Upload(props: UploadProps) {
     if (e.target.files && e.target.files.length <= 0) return;
     let filelist = Array.from(e.target.files);
     filelist.forEach((f, i) => {
-      postData(
-        f,
-        resolveFilename(uploadFilename, i),
-        axiosConfig!,
-        i,
-        onProgress,
-        setFlist,
-        successCallback,
-        failCallback
-      );
+      if (beforeUpload) {
+        const p = beforeUpload(f, i);
+        if (p instanceof Promise) {
+          p.then((res: File) => {
+            postData(
+              res,
+              resolveFilename(uploadFilename, i),
+              axiosConfig!,
+              i,
+              onProgress,
+              setFlist,
+              successCallback,
+              failCallback
+            );
+          });
+        } else {
+          if (p) {
+            //false不执行
+            postData(
+              f,
+              resolveFilename(uploadFilename, i),
+              axiosConfig!,
+              i,
+              onProgress,
+              setFlist,
+              successCallback,
+              failCallback
+            );
+          }
+        }
+      } else {
+        postData(
+          f,
+          resolveFilename(uploadFilename, i),
+          axiosConfig!,
+          i,
+          onProgress,
+          setFlist,
+          successCallback,
+          failCallback
+        );
+      }
     });
   };
   const handleClick = () => {
     inputRef.current?.click();
   };
+  const resolveBtnLoading = function (flist: ProgressBar[]) {
+    return flist.some((v) => v.status === "upload");
+  };
+  const onRemove = useCallback(
+    (file: ProgressBar) => {
+      if (customRemove) {
+        customRemove(file, setFlist);
+      } else {
+        setFlist((prev) => {
+          return prev.filter((item) => {
+            if (
+              item.uid === file.uid &&
+              item.status === "upload" &&
+              item.cancel
+            ) {
+              item.cancel.cancel();
+            }
+            return item.uid !== file.uid;
+          });
+        });
+      }
 
+      if (onRemoveCallback) {
+        onRemoveCallback(file);
+      }
+    },
+    [customRemove, onRemoveCallback]
+  );
   return (
     <div>
       <input
@@ -165,20 +244,29 @@ export function Upload(props: UploadProps) {
         style={{ display: "none" }}
         value=""
       ></input>
-      <Button onClick={handleClick}>upload</Button>
-      {flist.map((v) => {
-        return (
-          <div key={v.uid}>
-            {v.filename}
-            {v.percent}
-            {v.status}
-          </div>
-        );
-      })}
+      <Button
+        onClick={handleClick}
+        isLoading={resolveBtnLoading(flist)}
+        loadingText="上传中..."
+      >
+        upload
+      </Button>
+      {uploadMode === "default" && progress && (
+        <UploadList flist={flist} onRemove={onRemove}></UploadList>
+      )}
+      {uploadMode === "img" && (
+        <ImageList
+          flist={flist}
+          setFlist={setFlist}
+          onRemove={onRemove}
+        ></ImageList>
+      )}
     </div>
   );
 }
 Upload.defaultProps = {
   axiosConfig: {},
   uploadFilename: "avatar",
+  successCallback: () => console.log("上传成功"),
+  failCallbakc: () => console.error("上传失败"),
 };
