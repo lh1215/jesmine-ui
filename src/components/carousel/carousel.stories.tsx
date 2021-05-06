@@ -1,12 +1,6 @@
 import React from "react";
 import { Carousel } from "./index";
-import {
-  withKnobs,
-  text,
-  boolean,
-  color,
-  select,
-} from "@storybook/addon-knobs";
+import { withKnobs } from "@storybook/addon-knobs";
 
 export default {
   title: "Carousel",
