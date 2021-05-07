@@ -1,9 +1,9 @@
-import React, { PropsWithChildren, useCallback, useState, useRef } from "react";
-import styled from "styled-components";
+import React, { useCallback, useState, useRef, useMemo } from "react";
 import axios from "axios";
 import Button from "../button";
-import { Method, AxiosRequestConfig, CancelTokenSource } from "axios";
-import { UploadList, ImageList } from "../uploadList";
+import Icon from "../icon";
+import { AxiosRequestConfig, CancelTokenSource } from "axios";
+import { ImgUpload } from "../uploadList";
 
 export const updateFilist = (
   setFlist: React.Dispatch<React.SetStateAction<ProgressBar[]>>,
@@ -137,6 +137,7 @@ type UploadProps = {
     file: ProgressBar,
     setFlist: React.Dispatch<React.SetStateAction<ProgressBar[]>>
   ) => void;
+  max?: number;
 };
 
 export function Upload(props: UploadProps) {
@@ -150,6 +151,7 @@ export function Upload(props: UploadProps) {
     beforeUpload,
     uploadMode,
     progress,
+    max,
     customRemove,
     onRemoveCallback,
   } = props;
@@ -207,6 +209,13 @@ export function Upload(props: UploadProps) {
   const handleClick = () => {
     inputRef.current?.click();
   };
+  const shouldShow = useMemo(() => {
+    if (max !== undefined) {
+      return flist.length < max;
+    } else {
+      return true;
+    }
+  }, [max, flist]);
   const resolveBtnLoading = function (flist: ProgressBar[]) {
     return flist.some((v) => v.status === "upload");
   };
@@ -251,15 +260,19 @@ export function Upload(props: UploadProps) {
       >
         upload
       </Button>
-      {uploadMode === "default" && progress && (
-        <UploadList flist={flist} onRemove={onRemove}></UploadList>
+      {shouldShow && uploadMode === "default" && (
+        <Button
+          onClick={handleClick}
+          isLoading={resolveBtnLoading(flist)}
+          loadingText="上传中..."
+        >
+          upload
+        </Button>
       )}
-      {uploadMode === "img" && (
-        <ImageList
-          flist={flist}
-          setFlist={setFlist}
-          onRemove={onRemove}
-        ></ImageList>
+      {shouldShow && uploadMode === "img" && (
+        <ImgUpload onClick={handleClick}>
+          <Icon icon="plus"></Icon>
+        </ImgUpload>
       )}
     </div>
   );

@@ -1,14 +1,35 @@
-import React, { PropsWithChildren, ReactNode, useMemo } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
-import { color, typography } from "../shared/styles";
-import { darken, rgba, opacify } from "polished";
+import { color } from "../shared/styles";
 import { ProgressBar, updateFilist } from "../upload";
 import Icon from "../icon";
+import Button from "../button";
 
 interface UploadListProps {
   flist: ProgressBar[];
   onRemove: (item: ProgressBar) => void;
 }
+export const ImgUpload = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 104px;
+  height: 104px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  vertical-align: top;
+  background-color: #fafafa;
+  border: 1px dashed #d9d9d9;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  > svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
 const ImgWrapper = styled.div`
   display: inline-block;
   position: relative;
@@ -63,23 +84,45 @@ const ImgCloseBtn = styled.div`
   z-index: 2;
   display: none;
 `;
+const ProgressListItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+const ProgressLi = styled.li`
+  list-style: none;
+  padding: 10px;
+  box-shadow: 2px 2px 4px #d9d9d9;
+`;
 export function UploadList(props: UploadListProps) {
   const { flist, onRemove } = props;
   return (
-    <React.Fragment>
+    <ul style={{ padding: "10px" }}>
       {flist.map((item) => {
         return (
-          <span key={item.uid}>
-            <ImgWrapper>
-              <img src={item.img as string} alt="3"></img>
-              <ImgCloseBtn className="closebtn" onClick={() => onRemove(item)}>
-                <Icon icon="trash" color={color.light}></Icon>
-              </ImgCloseBtn>
-            </ImgWrapper>
-          </span>
+          <ProgressLi key={item.uid}>
+            <ProgressListItem>
+              <div>{item.filename}</div>
+              <div>
+                <Button
+                  style={{
+                    padding: "0",
+                    background: "transparent",
+                  }}
+                  onClick={() => onRemove(item)}
+                >
+                  <Icon icon="close"></Icon>
+                </Button>
+              </div>
+            </ProgressListItem>
+
+            {(item.status === "upload" || item.status === "ready") && (
+              <div>{item.percent}</div>
+            )}
+          </ProgressLi>
         );
       })}
-    </React.Fragment>
+    </ul>
   );
 }
 
@@ -106,14 +149,19 @@ export function ImageList(props: imageListProps) {
     }
   }, [flist, setFlist]);
   return (
-    <div>
+    <React.Fragment>
       {flist.map((item) => {
         return (
           <span key={item.uid}>
-            <img src={item.img as string} alt="3"></img>
+            <ImgWrapper>
+              <img src={item.img as string} alt="3"></img>
+              <ImgCloseBtn className="closebtn" onClick={() => onRemove(item)}>
+                <Icon icon="trash" color={color.light}></Icon>
+              </ImgCloseBtn>
+            </ImgWrapper>
           </span>
         );
       })}
-    </div>
+    </React.Fragment>
   );
 }
